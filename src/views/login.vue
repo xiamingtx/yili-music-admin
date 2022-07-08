@@ -4,7 +4,7 @@
  * @Author: 夏明
  * @Date: 2022-07-08 01:24:50
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-08 09:17:36
+ * @LastEditTime: 2022-07-08 12:03:29
 -->
 <template>
   <div class="login-page">
@@ -12,6 +12,7 @@
       <div class="title">元力音乐后台</div>
       <q-form class="q-gutter-md">
         <q-input
+          modelValue=""
           filled
           label="用户名："
           lazy-rules
@@ -19,6 +20,7 @@
         />
 
         <q-input
+          modelValue=""
           filled
           type="password"
           label="密码："
@@ -42,16 +44,16 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref } from 'vue'
 export default {
   name: 'Login',
   setup() {
-    const accept = ref(false);
+    const accept = ref(false)
     return {
       accept
-    };
+    }
   }
-};
+}
 </script>
 
 <style scoped lang="less">
