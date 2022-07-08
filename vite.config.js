@@ -21,7 +21,9 @@ export default defineConfig({
       sassVariables: "src/quasar-variables.sass",
     }),
   ],
-  alias: {
-    "@": path.resolve(__dirname, "src"),
-  },
+  resolve:{
+    alias:{
+      '@':path.resolve(__dirname,'./src')
+    }
+  }
 });
