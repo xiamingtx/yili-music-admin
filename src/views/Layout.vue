@@ -4,7 +4,7 @@
  * @Author: 夏明
  * @Date: 2022-07-07 22:53:52
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-08 09:15:57
+ * @LastEditTime: 2022-07-10 22:06:44
 -->
 <template>
   <q-layout view="hHh lpR fFf">
@@ -13,6 +13,10 @@
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title> 原力音乐 </q-toolbar-title>
+        <q-space />
+        <q-avatar color="teal" text-color="white">{{
+          nicknameFirstWord
+        }}</q-avatar>
       </q-toolbar>
     </q-header>
 
@@ -27,11 +31,19 @@
 
 <script>
 import { ref } from 'vue'
+import { useStore } from 'vuex'
+import { computed } from 'vue'
 export default {
   name: 'Layout',
   setup() {
     const leftDrawerOpen = ref(false)
+
+    const store = useStore()
+
     return {
+      nicknameFirstWord: computed(
+        () => store.getters['user/nicknameFirstWord']
+      ),
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value
