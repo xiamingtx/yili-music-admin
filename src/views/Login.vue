@@ -4,7 +4,7 @@
  * @Author: 夏明
  * @Date: 2022-07-08 01:24:50
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-10 23:58:01
+ * @LastEditTime: 2022-07-14 11:04:29
 -->
 <template>
   <div class="login-page">
@@ -46,7 +46,7 @@
 <script>
 import { ref } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
   name: 'Login',
@@ -55,12 +55,13 @@ export default {
     const username = ref('')
     const password = ref('')
     const store = useStore()
-    const router = useRouter();
-    const route = useRoute();
+    const router = useRouter()
+    const route = useRoute()
     const onSubmit = (username, password) => {
-      store.dispatch('user/login', { username, password }).then(() => {
-        // @ts-ignore
-        router.push({ path: route.query.redirect || '/' })
+        store.dispatch('user/login', { username, password }).then(() => {
+          store.dispatch('user/fetchCurrentUser')
+          // @ts-ignore
+          router.push({ path: route.query.redirect || '/' })
       })
     }
 

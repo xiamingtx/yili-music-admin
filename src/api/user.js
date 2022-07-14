@@ -4,14 +4,12 @@
  * @Author: 夏明
  * @Date: 2022-07-10 22:39:24
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-13 00:14:57
+ * @LastEditTime: 2022-07-14 10:17:21
  */
-import { get, post } from './request'
-
-export const login = (username, password) => {
-    return post('/login', { username, password })
-}
+import { get } from './request'
 
 export const search = (paging) => {
-    return get('/users/', { params: paging })
+    return get('/users', { params: paging })
 }
+
+export const me =  () => get('/users/me')
