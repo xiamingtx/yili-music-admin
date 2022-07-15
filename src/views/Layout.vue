@@ -4,7 +4,7 @@
  * @Author: 夏明
  * @Date: 2022-07-07 22:53:52
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-12 23:33:30
+ * @LastEditTime: 2022-07-15 15:36:49
 -->
 <template>
   <q-layout view="hHh lpR fFf">
@@ -14,9 +14,16 @@
 
         <q-toolbar-title> 原力音乐 </q-toolbar-title>
         <q-space />
-        <q-avatar color="teal" text-color="white">{{
-          nicknameFirstWord
-        }}</q-avatar>
+        <q-avatar color="teal" text-color="white">
+          {{ nicknameFirstWord }}
+          <q-menu fit>
+            <q-list style="min-width: 100px">
+              <q-item clickable v-close-popup @click="logout">
+                <q-item-section>退出</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-avatar>
       </q-toolbar>
     </q-header>
 
@@ -69,6 +76,7 @@ export default {
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },
+      logout: () => store.dispatch('user/logout').then(() => window.location.reload()),
       menuRoutes,
       route
     }

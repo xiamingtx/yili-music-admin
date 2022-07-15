@@ -4,7 +4,7 @@
  * @Author: 夏明
  * @Date: 2022-07-08 01:24:50
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-14 11:04:29
+ * @LastEditTime: 2022-07-15 16:36:06
 -->
 <template>
   <div class="login-page">
@@ -47,6 +47,7 @@
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 
 export default {
   name: 'Login',
@@ -57,11 +58,15 @@ export default {
     const store = useStore()
     const router = useRouter()
     const route = useRoute()
+
+    const $q = useQuasar()
+
     const onSubmit = (username, password) => {
-        store.dispatch('user/login', { username, password }).then(() => {
-          store.dispatch('user/fetchCurrentUser')
-          // @ts-ignore
-          router.push({ path: route.query.redirect || '/' })
+      store.dispatch('user/login', { username, password }).then(() => {
+        store.dispatch('user/fetchCurrentUser').then(() => {
+          router.push({ path: route.query.redirect || '/'})
+        })
+        // @ts-ignore
       })
     }
 

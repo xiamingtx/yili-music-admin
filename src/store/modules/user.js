@@ -11,11 +11,7 @@ const getters = {
   nicknameFirstWord: state => {
     if (!state.currentUser) return;
     let nickname = state.currentUser.nickname
-    if (nickname) {
-      return nickname.slice(0, 1);
-    } else {
-      return '';
-    }
+    return nickname ? nickname.slice(0, 1) : '';
   }
 }
 
@@ -43,7 +39,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       me()
         .then(currentUser => {
-          console.log(currentUser)
           commit('SET_CURRENT_USER', currentUser);
           setCurrentUser(currentUser);
           resolve(currentUser);
