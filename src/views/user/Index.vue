@@ -4,12 +4,12 @@
  * @Author: 夏明
  * @Date: 2022-07-12 22:29:21
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-15 16:02:40
+ * @LastEditTime: 2022-07-17 00:30:14
 -->
 <template>
   <div class="page">
     <div class="q-mt-md q-mb-md">
-      <q-btn color="primary" label="添加用户" />
+      <q-btn color="primary" label="添加用户" @click="toggleDialog" />
     </div>
     <q-table :rows="data" :columns="columns" row-key="name" hide-pagination />
     <div class="row justify-center q-mt-md">
@@ -20,60 +20,34 @@
         size="sm"
       />
     </div>
+    <CreateDialog v-if="showDialog" @hide="toggleDialog" />
   </div>
 </template>
 
-<script>
-import { ref, computed } from 'vue'
-import { search } from '@/api/user'
+<script setup>
+import { useUserSearch } from '../../composables/useUserSeacher'
+import CreateDialog from './CreateDialog.vue'
+import { useToggleDialog } from '../../composables/useToggleDialog'
+import { ref } from 'vue'
 
-export default {
-  name: 'Index',
-  setup() {
-    const columns = [
-      {
-        field: 'id',
-        label: 'ID'
-      },
-      {
-        field: 'username',
-        label: '用户名'
-      },
-      {
-        field: 'nickname',
-        label: '昵称'
-      }
-    ]
-
-    const data = ref([])
-
-    const fetchData = () => {
-      search({ page: 0 }).then(res => {
-        data.value = data.value.concat(res.content)
-        pagination.value.page = res.number + 1
-        pagination.value.rowsPerPage = res.size
-        pagination.value.rowsNumber = res.totalElements
-      })
-    }
-
-    fetchData()
-
-    const pagination = ref({
-      page: 2,
-      rowsPerPage: 3,
-      rowsNumber: 10
-    })
-
-    return {
-      columns,
-      data,
-      pagination,
-      pagesNumber: computed(() =>
-        Math.ceil(data.length / pagination.value.rowsPerPage)
-      )
-    }
+const columns = [
+  {
+    field: 'id',
+    label: 'ID'
+  },
+  {
+    field: 'username',
+    label: '用户名'
+  },
+  {
+    field: 'nickname',
+    label: '昵称'
   }
-}
+]
+
+const { data, pagination, pagesNumber, fetchData } = useUserSearch()
+
+const { showDialog, toggleDialog } = useToggleDialog()
 </script>
 
 <style lang=""></style>

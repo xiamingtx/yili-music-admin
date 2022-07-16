@@ -5,12 +5,11 @@
  * @Author: 夏明
  * @Date: 2022-07-05 20:54:57
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-15 19:59:55
+ * @LastEditTime: 2022-07-16 20:44:57
  */
 import axios from 'axios'
 import store from '../store'
 import { Notify } from 'quasar'
-import { handleError } from 'vue'
 
 const baseURL = import.meta.env.VITE_API_HOST
 const tokenPrefix = 'Bearer '
