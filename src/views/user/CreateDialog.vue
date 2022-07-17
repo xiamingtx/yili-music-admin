@@ -4,7 +4,7 @@
  * @Author: 夏明
  * @Date: 2022-07-16 21:29:13
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-17 00:32:44
+ * @LastEditTime: 2022-07-17 21:20:42
 -->
 <template>
   <q-dialog v-model="show" persistent>
@@ -50,9 +50,9 @@
 import { ref } from 'vue'
 import { useCreateUser } from '../../composables/useCreateUser'
 
-const show = ref(true)
+const emits = defineEmits(['create-success'])
 
-const { username, password, createUser } = useCreateUser()
+const { username, password, createUser, show } = useCreateUser(emits)
 </script>
 
 <style lang=""></style>

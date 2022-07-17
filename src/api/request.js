@@ -5,7 +5,7 @@
  * @Author: 夏明
  * @Date: 2022-07-05 20:54:57
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-16 20:44:57
+ * @LastEditTime: 2022-07-17 21:15:57
  */
 import axios from 'axios'
 import store from '../store'
@@ -36,6 +36,10 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   response => {
+    if (response.data.code) {
+      handleErrorResponse(response)
+      return Promise.reject(response.data)
+    }
     return response.data
   },
   error => {
@@ -45,14 +49,25 @@ instance.interceptors.response.use(
 )
 
 const handleErrorResponse = response => {
+  console.log(response) // for debug
   if (response.status === 401 || response.status === 403) {
     store.dispatch('user/logout').then(() => window.location.reload())
   } else {
-    Notify.create({
-      type: 'negative',
-      message: response.data.message,
-      position: 'top'
-    })
+    if (response.data instanceof Array) {
+      response.data.forEach(item => {
+        Notify.create({
+          type: 'negative',
+          message: item.message,
+          position: 'top'
+        })
+      })
+    } else {
+      Notify.create({
+        type: 'negative',
+        message: response.data.message,
+        position: 'top'
+      })
+    }
   }
 }
 
