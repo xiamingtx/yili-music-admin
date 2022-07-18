@@ -5,11 +5,12 @@ import { create } from './../api/user';
  * @Author: 夏明
  * @Date: 2022-07-16 22:27:55
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-17 21:20:47
+ * @LastEditTime: 2022-07-18 19:52:43
  */
 import { create } from '../api/user'
 import { ref } from 'vue'
 import { Notify } from 'quasar'
+import notify from '../utils/notify'
 
 export const useCreateUser = emits => {
   const username = ref('')
@@ -19,11 +20,7 @@ export const useCreateUser = emits => {
   const createUser = () => {
     create({ username: username.value, password: password.value }).then(res => {
       show.value = false
-      Notify.create({
-        type: 'positive',
-        message: '用户创建成功!',
-        position: 'top'
-      })
+      notify.success('用户创建成功!')
       emits('create-success')
     })
   }

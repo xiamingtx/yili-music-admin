@@ -5,11 +5,12 @@
  * @Author: 夏明
  * @Date: 2022-07-05 20:54:57
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-17 21:15:57
+ * @LastEditTime: 2022-07-18 19:51:52
  */
 import axios from 'axios'
 import store from '../store'
 import { Notify } from 'quasar'
+import notify from '../utils/notify'
 
 const baseURL = import.meta.env.VITE_API_HOST
 const tokenPrefix = 'Bearer '
@@ -55,18 +56,10 @@ const handleErrorResponse = response => {
   } else {
     if (response.data instanceof Array) {
       response.data.forEach(item => {
-        Notify.create({
-          type: 'negative',
-          message: item.message,
-          position: 'top'
-        })
+        notify.error(item.message)
       })
     } else {
-      Notify.create({
-        type: 'negative',
-        message: response.data.message,
-        position: 'top'
-      })
+      notify.error(response.data.message)
     }
   }
 }

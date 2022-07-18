@@ -4,7 +4,7 @@
  * @Author: 夏明
  * @Date: 2022-07-12 22:29:21
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-17 22:41:31
+ * @LastEditTime: 2022-07-18 21:03:48
 -->
 <template>
   <div class="page">
@@ -12,8 +12,8 @@
       <q-btn color="primary" label="添加用户" @click="showDialog" />
     </div>
     <q-table
-      :rows="data"
       :columns="columns"
+      :rows="data"
       row-key="name"
       @request="fetchData"
       v-model:pagination="pagination"
@@ -43,7 +43,9 @@ const columns = [
   }
 ]
 
-const { showDialog, hideDialog, show } = useToggleDialog()
+const show = ref(false)
+
+const { showDialog, hideDialog } = useToggleDialog(show)
 
 const { data, pagination, pagesNumber, fetchData } = useUserSearch()
 </script>

@@ -4,12 +4,10 @@
  * @Author: 夏明
  * @Date: 2022-07-16 21:38:49
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-17 21:02:29
+ * @LastEditTime: 2022-07-18 21:03:12
  */
 import { ref } from 'vue'
-export const useToggleDialog = () => {
-  const show = ref(false)
-
+export const useToggleDialog = show => {
   const hideDialog = () => {
     show.value = false
   }
@@ -21,6 +19,5 @@ export const useToggleDialog = () => {
   return {
     showDialog,
     hideDialog,
-    show
   }
 }
