@@ -4,27 +4,21 @@
  * @Author: 夏明
  * @Date: 2022-07-07 23:42:45
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-11 00:22:13
+ * @LastEditTime: 2022-07-20 17:12:16
 -->
 <template>
-  <div>欢迎光临 {{ nickname }}</div>
-  <q-btn @click="logout">退出</q-btn>
+  <div class="page">
+    <CosUploader label="上传" style="width: 40vw" />
+  </div>
 </template>
 
-<script>
+<script setup>
 import { computed } from '@vue/runtime-core'
 import { useStore } from 'vuex'
+import CosUploader from '../../composables/useCosUploader'
 
-export default {
-  name: 'Index',
-  setup() {
-    const store = useStore()
-    return {
-      nickname: computed(() => store.state.user.nickname),
-      logout: () => store.dispatch('user/logout').then(() => window.location.reload())
-    }
-  }
-}
+const store = useStore()
+const nickname = computed(() => store.state.user.nickname)
 </script>
 
 <style scoped></style>
