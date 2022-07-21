@@ -4,7 +4,7 @@
  * @Author: 夏明
  * @Date: 2022-07-18 16:38:01
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-18 22:26:12
+ * @LastEditTime: 2022-07-21 11:48:42
 -->
 <template>
   <div class="page">
@@ -16,20 +16,55 @@
       />
     </div>
     <q-table :columns="columns" :rows="data" row-key="id">
+      <template v-slot:body-cell-status="props">
+        <q-td :props="props">
+          <q-badge
+            :color="musicStatusColor[props.value]"
+            outline
+            :label="musicStatus[props.value]"
+          />
+        </q-td>
+      </template>
       <template v-slot:body-cell-operation="props">
         <q-td :props="props">
-          <q-btn flat color="primary" label="编辑" @click="edit(props)" />
+          <q-btn-dropdown
+            size="sm"
+            split
+            color="primary"
+            label="编辑"
+            @click="edit(props.row)"
+          >
+            <q-list dense>
+              <q-item
+                v-if="props.row.status !== 'PUBLISHED'"
+                clickable
+                v-close-popup
+                @click="publishMusic(props.row.id)"
+              >
+                <q-item-section>
+                  <q-item-label>上架</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item
+                v-if="props.row.status === 'PUBLISHED'"
+                clickable
+                v-close-popup
+                @click="closeMusic(props.row.id)"
+              >
+                <q-item-section>
+                  <q-item-label>下架</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
         </q-td>
       </template>
     </q-table>
     <CreateDialog
       v-if="createDialogShow"
-      @hide="createDialog.hideDialog"
+      :data="editRow"
+      @hide="onHide"
       @create-success="fetchData"
-    />
-    <EditDialog
-      v-if="editDialogShow"
-      @hide="editDialog.hideDialog"
       @edit-success="fetchData"
     />
   </div>
@@ -37,10 +72,11 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { list } from '../../api/music'
+import { list, publish, close } from '../../api/music'
 import { useToggleDialog } from '../../composables/useToggleDialog'
 import CreateDialog from './CreateDialog.vue'
-import EditDialog from './EditDialog.vue'
+import { musicStatus, musicStatusColor } from '../../utils/dict'
+import notify from '../../utils/notify'
 
 const columns = [
   {
@@ -56,6 +92,7 @@ const columns = [
   {
     name: 'status',
     field: 'status',
+    align: 'center',
     label: '上架状态'
   },
   {
@@ -68,12 +105,14 @@ const createDialogShow = ref(false)
 const editDialogShow = ref(false)
 
 const createDialog = useToggleDialog(createDialogShow)
-const editDialog = useToggleDialog(editDialogShow)
 
 const data = ref([])
 
-const edit = (props) => {
-  console.log(props)
+const editRow = ref(null)
+
+const edit = row => {
+  editRow.value = row
+  createDialog.showDialog()
 }
 
 const fetchData = () => {
@@ -83,5 +122,24 @@ const fetchData = () => {
 }
 
 onMounted(fetchData)
+
+const publishMusic = id => {
+  publish(id).then(() => {
+    notify.success('音乐上架成功!')
+    fetchData()
+  })
+}
+
+const closeMusic = id => {
+  close(id).then(() => {
+    notify.success('音乐下架成功!')
+    fetchData()
+  })
+}
+
+const onHide = () => {
+  createDialog.hideDialog()
+  editRow.value = null
+}
 </script>
 <style lang=""></style>
