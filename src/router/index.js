@@ -4,7 +4,7 @@
  * @Author: 夏明
  * @Date: 2022-07-07 23:37:08
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-18 17:06:16
+ * @LastEditTime: 2022-07-23 08:39:42
  */
 import { createRouter, createWebHashHistory } from 'vue-router'
 
@@ -28,6 +28,12 @@ export const menuRoutes = [
     name: 'Music',
     meta: { title: '歌曲管理', icon: 'music_note' },
     component: () => import('../views/music/Index.vue')
+  },
+  {
+    path: 'artist',
+    name: 'Artist',
+    meta: { title: '歌手管理', icon: 'music_note' },
+    component: () => import('../views/artist/Index.vue')
   }
 ]
 

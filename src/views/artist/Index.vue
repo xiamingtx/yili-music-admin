@@ -2,9 +2,9 @@
  * @Description: Description of this file
  * @Version: 2.0
  * @Author: 夏明
- * @Date: 2022-07-18 16:38:01
+ * @Date: 2022-07-23 08:37:45
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-23 08:44:06
+ * @LastEditTime: 2022-07-23 10:43:41
 -->
 <template>
   <div class="page">
@@ -19,10 +19,17 @@
       <template v-slot:body-cell-status="props">
         <q-td :props="props">
           <q-badge
-            :color="musicStatusColor[props.value]"
+            :color="artistStatusColor[props.value]"
             outline
-            :label="musicStatus[props.value]"
+            :label="artistStatus[props.value]"
           />
+        </q-td>
+      </template>
+      <template v-slot:body-cell-photo="props">
+        <q-td :props="props">
+          <q-avatar v-if="props.value" :props="props">
+            <img :src="props.value.uri" alt="" />
+          </q-avatar>
         </q-td>
       </template>
       <template v-slot:body-cell-operation="props">
@@ -60,7 +67,7 @@
         </q-td>
       </template>
     </q-table>
-    <CreateDialog
+    <create-dialog
       v-if="createDialogShow"
       :data="editRow"
       @hide="onHide"
@@ -71,23 +78,27 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { list, publish, close } from '../../api/music'
+import { ref, onMounted } from 'vue'
 import { useToggleDialog } from '../../composables/useToggleDialog'
 import CreateDialog from './CreateDialog.vue'
-import { musicStatus, musicStatusColor } from '../../utils/dict'
-import notify from '../../utils/notify'
+import { artistStatus, artistStatusColor } from '../../utils/dict'
+import { list } from '../../api/artist'
 
 const columns = [
   {
     name: 'name',
     field: 'name',
-    label: '歌曲名'
+    label: '歌手名'
   },
   {
-    name: 'description',
-    field: 'description',
-    label: '简介'
+    name: 'remark',
+    field: 'remark',
+    label: '备注'
+  },
+  {
+    name: 'photo',
+    field: 'photo',
+    label: '照片'
   },
   {
     name: 'status',
@@ -101,6 +112,7 @@ const columns = [
     label: '操作'
   }
 ]
+
 const createDialogShow = ref(false)
 
 const createDialog = useToggleDialog(createDialogShow)
@@ -115,26 +127,12 @@ const edit = row => {
 }
 
 const fetchData = () => {
-  list().then(musicList => {
-    data.value = musicList
+  list().then(artistList => {
+    data.value = artistList
   })
 }
 
 onMounted(fetchData)
-
-const publishMusic = id => {
-  publish(id).then(() => {
-    notify.success('音乐上架成功!')
-    fetchData()
-  })
-}
-
-const closeMusic = id => {
-  close(id).then(() => {
-    notify.success('音乐下架成功!')
-    fetchData()
-  })
-}
 
 const onHide = () => {
   createDialog.hideDialog()
