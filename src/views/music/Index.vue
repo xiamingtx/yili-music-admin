@@ -4,7 +4,7 @@
  * @Author: 夏明
  * @Date: 2022-07-18 16:38:01
  * @LastEditors: 夏明
- * @LastEditTime: 2022-07-23 08:44:06
+ * @LastEditTime: 2022-07-26 13:35:49
 -->
 <template>
   <div class="page">
@@ -15,7 +15,24 @@
         @click="createDialog.showDialog"
       />
     </div>
-    <q-table :columns="columns" :rows="data" row-key="id">
+    <div
+      class="fit row no-wrap justify-start items-center content-start q-mb-md"
+    >
+      <q-input
+        dense
+        v-model="searchKeys.name"
+        placeholder="请输入关键词"
+        class="q-mr-md"
+      />
+      <q-btn color="primary" label="检索" @click="fetchData" />
+    </div>
+    <q-table
+      :columns="columns"
+      :rows="data"
+      row-key="id"
+      v-model:pagination="pagination"
+      @request="fetchData"
+    >
       <template v-slot:body-cell-status="props">
         <q-td :props="props">
           <q-badge
@@ -71,8 +88,8 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { list, publish, close } from '../../api/music'
+import { onMounted, ref, reactive } from 'vue'
+import { search, publish, close } from '../../api/music'
 import { useToggleDialog } from '../../composables/useToggleDialog'
 import CreateDialog from './CreateDialog.vue'
 import { musicStatus, musicStatusColor } from '../../utils/dict'
@@ -114,13 +131,33 @@ const edit = row => {
   createDialog.showDialog()
 }
 
-const fetchData = () => {
-  list().then(musicList => {
-    data.value = musicList
+const searchKeys = ref({ name: '' })
+
+const pagination = ref({
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+
+const fetchData = props => {
+  const { page, rowsPerPage } = props.pagination || pagination.value
+
+  const filter = {
+    ...searchKeys.value,
+    page,
+    size: rowsPerPage
+  }
+  search(filter).then(musicList => {
+    data.value = musicList.content
+    pagination.value = {
+      page: musicList.number + 1,
+      rowsPerPage: musicList.size,
+      rowsNumber: musicList.totalElements
+    }
   })
 }
 
-onMounted(fetchData)
+onMounted(() => fetchData({ pagination: pagination.value }))
 
 const publishMusic = id => {
   publish(id).then(() => {
